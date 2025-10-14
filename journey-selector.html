@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey Recipes - Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a2b3c;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-title svg {
+            width: 24px;
+            height: 24px;
+            color: #667eea;
+        }
+
+        .panel-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .panel-body {
+            padding: 20px 28px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .journey-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .journey-item:hover {
+            background: #e9ecef;
+        }
+
+        .journey-item.active {
+            background: #ede9fe;
+            border: 2px solid #667eea;
+        }
+
+        .journey-info {
+            flex: 1;
+        }
+
+        .journey-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a2b3c;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .journey-icon {
+            width: 18px;
+            height: 18px;
+            color: #667eea;
+        }
+
+        .journey-desc {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: #cbd5e0;
+            border-radius: 13px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .toggle-switch.active {
+            background: #667eea;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .sparkle {
+            width: 10px;
+            height: 10px;
+        }
+
+        .panel-footer {
+            padding: 20px 28px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .selected-count {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: #9ca3af;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 40px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <path d="M12 18v-6"></path>
+                    <path d="M9 15l3 3 3-3"></path>
+                </svg>
+                Journey Recipes
+            </div>
+            <div class="panel-subtitle">
+                Select pre-built automation journeys to add to your campaign
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" class="search-input" placeholder="Search journeys...">
+            </div>
+
+            <div class="journey-item active" onclick="toggleJourney(this)">
+                <div class="journey-info">
+                    <div class="journey-name">
+                        <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                        Recruit past participants
+                        <span class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </span>
+                    </div>
+                    <div class="journey-desc">Invite last year's participants to return</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+
+            <div class="journey-item active" onclick="toggleJourney(this)">
+                <div class="journey-info">
+                    <div class="journey-name">
+                        <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Nurture new participants
+                        <span class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </span>
+                    </div>
+                    <div class="journey-desc">Onboard and support first-time riders</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+
+            <div class="journey-item active" onclick="toggleJourney(this)">
+                <div class="journey-info">
+                    <div class="journey-name">
+                        <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        Welcome back returning participants
+                        <span class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </span>
+                    </div>
+                    <div class="journey-desc">Special welcome for returning riders</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+
+            <div class="journey-item active" onclick="toggleJourney(this)">
+                <div class="journey-info">
+                    <div class="journey-name">
+                        <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        Team captain coaching
+                        <span class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </span>
+                    </div>
+                    <div class="journey-desc">Guide team captains with tips and resources</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+
+            <div class="journey-item active" onclick="toggleJourney(this)">
+                <div class="journey-info">
+                    <div class="journey-name">
+                        <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Countdown to event start
+                        <span class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </span>
+                    </div>
+                    <div class="journey-desc">Build excitement as event date approaches</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+
+            <div class="journey-item active" onclick="toggleJourney(this)">
+                <div class="journey-info">
+                    <div class="journey-name">
+                        <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        Post event nurturing
+                        <span class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </span>
+                    </div>
+                    <div class="journey-desc">Thank participants and share impact</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+
+            <div class="journey-item active" onclick="toggleJourney(this)">
+                <div class="journey-info">
+                    <div class="journey-name">
+                        <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        Matched giving moment
+                        <span class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </span>
+                    </div>
+                    <div class="journey-desc">Amplify donations with matching opportunities</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+
+            <div class="journey-item active" onclick="toggleJourney(this)">
+                <div class="journey-info">
+                    <div class="journey-name">
+                        <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        Nudge stalled fundraising pages
+                        <span class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </span>
+                    </div>
+                    <div class="journey-desc">Re-engage inactive fundraisers</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <div class="selected-count">
+                <strong>8</strong> journeys selected
+            </div>
+            <button class="btn btn-primary" onclick="addToCanvas()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Add to Canvas
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleJourney(element) {
+            element.classList.toggle('active');
+            const toggle = element.querySelector('.toggle-switch');
+            toggle.classList.toggle('active');
+            updateCount();
+        }
+
+        function updateCount() {
+            const count = document.querySelectorAll('.journey-item.active').length;
+            document.querySelector('.selected-count').innerHTML = `<strong>${count}</strong> journeys selected`;
+        }
+
+        function addToCanvas() {
+            alert('Adding selected journeys to canvas...');
+        }
+    </script>
+</body>
+</html>
