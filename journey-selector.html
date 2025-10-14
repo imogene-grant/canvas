@@ -223,6 +223,106 @@
         .search-input:focus {
             border-color: #667eea;
         }
+
+        .create-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .create-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .create-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .ai-create:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        }
+
+        .create-icon-wrapper {
+            width: 40px;
+            height: 40px;
+            background: #ede9fe;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .ai-create .create-icon-wrapper {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .create-icon {
+            width: 20px;
+            height: 20px;
+            color: #667eea;
+        }
+
+        .ai-create .create-icon {
+            color: white;
+        }
+
+        .create-content {
+            flex: 1;
+        }
+
+        .create-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a2b3c;
+            margin-bottom: 2px;
+        }
+
+        .create-desc {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .section-divider {
+            text-align: center;
+            position: relative;
+            margin: 24px 0;
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 35%;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .section-divider::before {
+            left: 0;
+        }
+
+        .section-divider::after {
+            right: 0;
+        }
     </style>
 </head>
 <body>
@@ -249,6 +349,37 @@
                     <path d="m21 21-4.35-4.35"></path>
                 </svg>
                 <input type="text" class="search-input" placeholder="Search journeys...">
+            </div>
+
+            <div class="create-options">
+                <button class="create-btn ai-create" onclick="createWithAI()">
+                    <div class="create-icon-wrapper">
+                        <svg class="create-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                        </svg>
+                    </div>
+                    <div class="create-content">
+                        <div class="create-title">Describe your journey</div>
+                        <div class="create-desc">Use AI to generate a custom journey</div>
+                    </div>
+                </button>
+                <button class="create-btn blank-create" onclick="createBlank()">
+                    <div class="create-icon-wrapper">
+                        <svg class="create-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div class="create-content">
+                        <div class="create-title">Blank canvas</div>
+                        <div class="create-desc">Start with an empty journey flow</div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="section-divider">
+                <span>Or select from recipes</span>
             </div>
 
             <div class="journey-item active" onclick="toggleJourney(this)">
@@ -442,6 +573,14 @@
 
         function addToCanvas() {
             alert('Adding selected journeys to canvas...');
+        }
+
+        function createWithAI() {
+            alert('Opening AI journey builder - describe your journey and Canvas will generate the flow with branching logic, emails, and SMS touchpoints!');
+        }
+
+        function createBlank() {
+            alert('Creating blank journey canvas...');
         }
     </script>
 </body>
