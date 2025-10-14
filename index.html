@@ -244,14 +244,12 @@
                         </svg>
                         Rebuild Last Year's Campaign
                     </button>
-                    <button class="prompt-pill" onclick="fillPrompt('annual')">
+                    <button class="prompt-pill" onclick="fillPrompt('raffle')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                            <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+                            <path d="M16 3v4M8 3v4M2 11h20"></path>
                         </svg>
-                        Annual Fund Campaign
+                        Raffle Campaign
                     </button>
                     <button class="prompt-pill" onclick="fillPrompt('event')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -259,6 +257,14 @@
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                         Event Fundraiser
+                    </button>
+                    <button class="prompt-pill" onclick="fillPrompt('tax')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        Tax Appeal
                     </button>
                 </div>
             </div>
@@ -281,9 +287,10 @@
             const prompts = {
                 'giving day': 'Create a 24-hour giving day campaign targeting alumni with matching gift incentives and hourly challenges',
                 'peer-to-peer': 'Launch a peer-to-peer fundraising campaign where supporters can create personal fundraising pages and compete in teams',
-                'rebuild': 'Rebuild last year\'s annual fund campaign with updated messaging and a 20% increased goal',
-                'annual': 'Create an annual fund campaign with tiered giving levels and impact stories for each donation amount',
-                'event': 'Build a gala fundraiser campaign with ticket sales, sponsorship packages, and auction items'
+                'rebuild': 'Recreate [CAMPAIGN NAME] for 2025. [Describe campaign type and format]. [Number] teams of [size]; each team commits to a $[amount] fundraising minimum. Event location: [location]. [Any special features or changes from last year].',
+                'raffle': 'Create a raffle fundraiser with multiple prize tiers, ticket pricing options, and automated winner selection',
+                'event': 'Build a gala fundraiser campaign with ticket sales, sponsorship packages, and auction items',
+                'tax': 'Launch an end-of-financial-year tax appeal with donation tier messaging, tax-deductible receipts, and urgency-driven communications'
             };
             input.value = prompts[type];
             input.focus();
