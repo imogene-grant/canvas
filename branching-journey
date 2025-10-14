@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Journey Flow - Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            overflow: auto;
+            padding: 40px 20px;
+        }
+
+        .journey-container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .journey-header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .journey-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .journey-title h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a2b3c;
+        }
+
+        .journey-icon {
+            width: 24px;
+            height: 24px;
+            color: #667eea;
+        }
+
+        .status-badge {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .flow-canvas {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 60px 40px;
+            position: relative;
+        }
+
+        .flow-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+            max-width: 400px;
+        }
+
+        .connector-line {
+            width: 3px;
+            height: 40px;
+            background: linear-gradient(to bottom, #cbd5e0, #9ca3af);
+            margin: 0;
+            position: relative;
+        }
+
+        .connector-line::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #9ca3af;
+        }
+
+        .branch-split {
+            width: 100%;
+            height: 80px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .branch-split svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .branch-container {
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .branch-path {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 0 0 350px;
+        }
+
+        .branch-label {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
+            color: #92400e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            border: 2px solid #fbbf24;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+            white-space: nowrap;
+        }
+
+        .node {
+            background: white;
+            border: 3px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 350px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin: 20px 0;
+        }
+
+        .node:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .node.trigger {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+        }
+
+        .node.sms {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
+
+        .node.automation {
+            border-color: #8b5cf6;
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+        }
+
+        .node.decision {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        .node.action {
+            border-color: #ec4899;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+        }
+
+        .node.wait {
+            border-color: #6b7280;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .node-icon-wrapper {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .node.trigger .node-icon-wrapper {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .node-icon {
+            width: 22px;
+            height: 22px;
+        }
+
+        .node.trigger .node-icon {
+            color: white;
+        }
+
+        .node.sms .node-icon {
+            color: #3b82f6;
+        }
+
+        .node.automation .node-icon {
+            color: #8b5cf6;
+        }
+
+        .node.decision .node-icon {
+            color: #f59e0b;
+        }
+
+        .node.action .node-icon {
+            color: #ec4899;
+        }
+
+        .node.wait .node-icon {
+            color: #6b7280;
+        }
+
+        .node-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            opacity: 0.7;
+        }
+
+        .node-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a2b3c;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .node.trigger .node-title {
+            color: white;
+        }
+
+        .node-content {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .node.trigger .node-content {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .message-preview {
+            background: white;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.7;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .personalization-tag {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -14px;
+            left: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            z-index: 10;
+            border: 3px solid white;
+        }
+
+        .ai-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .sparkle {
+            width: 11px;
+            height: 11px;
+        }
+
+        .timing-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.06);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .timing-icon {
+            width: 13px;
+            height: 13px;
+        }
+
+        .preflight-checks {
+            background: rgba(251, 191, 36, 0.15);
+            border: 2px solid #fbbf24;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #92400e;
+        }
+
+        .preflight-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .preflight-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .check-icon {
+            width: 15px;
+            height: 15px;
+            color: #10b981;
+        }
+
+        .audience-badge {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="journey-container">
+        <div class="journey-header">
+            <div class="journey-title">
+                <svg class="journey-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <h2>Recruit past participants - SMS Journey</h2>
+            </div>
+            <div class="status-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Live
+            </div>
+        </div>
+
+        <div class="flow-canvas">
+            <div class="flow-column">
+                <!-- Step 1: Trigger -->
+                <div class="node trigger">
+                    <div class="step-number">1</div>
+                    <div class="node-header">
+                        <div class="node-icon-wrapper">
+                            <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="node-label">Trigger</div>
+                    </div>
+                    <div class="node-title">Campaign Published</div>
+                    <div class="node-content">Journey activates when Maya sets campaign live</div>
+                    <div class="audience-badge">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        </svg>
+                        Last year's team captains
+                    </div>
+                </div>
+
+                <div class="connector-line"></div>
+
+                <!-- Step 2: Preflight -->
+                <div class="node automation">
+                    <div class="step-number">2</div>
+                    <div class="ai-badge">
+                        <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                        </svg>
+                        AI
+                    </div>
+                    <div class="node-header">
+                        <div class="node-icon-wrapper">
+                            <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="node-label">Automation</div>
+                    </div>
+                    <div class="node-title">Preflight Checks</div>
+                    <div class="node-content">Validate send conditions before scheduling</div>
+                    <div class="preflight-checks">
+                        <div class="preflight-item">
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Time-of-day (9am-7pm)
+                        </div>
+                        <div class="preflight-item">
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Timezone scheduling
+                        </div>
+                        <div class="preflight-item">
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Opt-in verified
+                        </div>
+                    </div>
+                </div>
+
+                <div class="connector-line"></div>
+
+                <!-- Step 3: Initial SMS -->
+                <div class="node sms">
+                    <div class="step-number">3</div>
+                    <div class="ai-badge">
+                        <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                        </svg>
+                        AI
+                    </div>
+                    <div class="node-header">
+                        <div class="node-icon-wrapper">
+                            <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="node-label">SMS</div>
+                    </div>
+                    <div class="node-title">Initial Invite</div>
+                    <div class="node-content">Personalized recruitment message</div>
+                    <div class="message-preview">
+                        "Hi <span class="personalization-tag">{first_name}</span>—it's Maya from Pink Peloton. Loved having you in Ride 500 last year. Keen to ride again? The Great Ocean Road is calling you! I can set you up in under a minute… keen?"
+                    </div>
+                    <div class="timing-badge">
+                        <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Send immediately
+                    </div>
+                </div>
+
+                <div class="connector-line"></div>
+
+                <!-- Step 4: Decision Point -->
+                <div class="node decision">
+                    <div class="step-number">4</div>
+                    <div class="ai-badge">
+                        <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                        </svg>
+                        AI
+                    </div>
+                    <div class="node-header">
+                        <div class="node-icon-wrapper">
+                            <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M7 21l-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l4.3 4.3c1 1 1 2.5 0 3.4l-9.6 9.6c-1 1-2.5 1-3.4 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="node-label">Decision</div>
+                    </div>
+                    <div class="node-title">Intent Detection</div>
+                    <div class="node-content">Natural language AI classifies reply: positive intent, questions, or declined</div>
+                    <div class="timing-badge">
+                        <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Wait for reply
+                    </div>
+                </div>
+
+                <!-- Branch Split Visual -->
+                <div class="branch-split">
+                    <svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="200" y1="0" x2="200" y2="20" stroke="#9ca3af" stroke-width="3"/>
+                        <line x1="200" y1="20" x2="100" y2="60" stroke="#9ca3af" stroke-width="3"/>
+                        <line x1="200" y1="20" x2="300" y2="60" stroke="#9ca3af" stroke-width="3"/>
+                        <line x1="100" y1="60" x2="100" y2="80" stroke="#9ca3af" stroke-width="3"/>
+                        <line x1="300" y1="60" x2="300" y2="80" stroke="#9ca3af" stroke-width="3"/>
+                        <polygon points="100,80 94,72 106,72" fill="#9ca3af"/>
+                        <polygon points="300,80 294,72 306,72" fill="#9ca3af"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- BRANCHING PATHS -->
+            <div class="branch-container">
+                <!-- LEFT BRANCH: Positive Intent -->
+                <div class="branch-path">
+                    <div class="branch-label">✓ Positive ("I'm in!")</div>
+
+                    <div class="node automation">
+                        <div class="step-number">5a</div>
+                        <div class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </div>
+                            <div class="node-label">Automation</div>
+                        </div>
+                        <div class="node-title">Auto Team Page Creation</div>
+                        <div class="node-content">Recalls <span class="personalization-tag">{team_name}</span>, creates page, prefills honour badges</div>
+                        <div class="timing-badge">
+                            <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            Immediate
+                        </div>
+                    </div>
+
+                    <div class="connector-line"></div>
+
+                    <div class="node sms">
+                        <div class="step-number">6a</div>
+                        <div class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="node-label">SMS</div>
+                        </div>
+                        <div class="node-title">Team Page + Badge</div>
+                        <div class="node-content">Magic link with Triple Threat badge</div>
+                        <div class="message-preview">
+                            "Amazing! Your team—<span class="personalization-tag">{team_name}</span>—is back! Page ready: <span class="personalization-tag">{magic_link}</span>. You just earned Triple Threat for year 3! 🎉"
+                        </div>
+                    </div>
+
+                    <div class="connector-line"></div>
+
+                    <div class="node action">
+                        <div class="step-number">7a</div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                            </div>
+                            <div class="node-label">Action</div>
+                        </div>
+                        <div class="node-title">Social Share</div>
+                        <div class="node-content">Page opens: SMS, WhatsApp, Email, Messenger share</div>
+                        <div class="timing-badge">
+                            <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            On page visit
+                        </div>
+                    </div>
+
+                    <div class="connector-line"></div>
+
+                    <div class="node sms">
+                        <div class="step-number">8a</div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                </svg>
+                            </div>
+                            <div class="node-label">SMS</div>
+                        </div>
+                        <div class="node-title">Jersey Sizes</div>
+                        <div class="node-content">Natural language size collection</div>
+                        <div class="message-preview">
+                            "Team <span class="personalization-tag">{team_name}</span> is full! Reply with jersey size (XS–XXL)."
+                        </div>
+                        <div class="timing-badge">
+                            <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            Team reaches 10/10
+                        </div>
+                    </div>
+
+                    <div class="connector-line"></div>
+
+                    <div class="node action">
+                        <div class="step-number">9a</div>
+                        <div class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"></path>
+                                </svg>
+                            </div>
+                            <div class="node-label">Incentive</div>
+                        </div>
+                        <div class="node-title">Merch Incentive</div>
+                        <div class="node-content">$100 self-donation = name on jersey (24hr)</div>
+                        <div class="message-preview">
+                            "Got it! Kickstart with $100 today and we'll print your name on your jersey. Tap: <span class="personalization-tag">{pay_link}</span>"
+                        </div>
+                        <div class="timing-badge">
+                            <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            After size reply
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT BRANCH: Questions/Not Now -->
+                <div class="branch-path">
+                    <div class="branch-label">? Questions / Not Now</div>
+
+                    <div class="node automation">
+                        <div class="step-number">5b</div>
+                        <div class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </div>
+                            <div class="node-label">Automation</div>
+                        </div>
+                        <div class="node-title">FAQ Routing</div>
+                        <div class="node-content">Detects questions, routes to answers or flags for human review</div>
+                        <div class="timing-badge">
+                            <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            Immediate
+                        </div>
+                    </div>
+
+                    <div class="connector-line"></div>
+
+                    <div class="node sms">
+                        <div class="step-number">6b</div>
+                        <div class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="node-label">SMS</div>
+                        </div>
+                        <div class="node-title">Contextual Response</div>
+                        <div class="node-content">AI-generated answer or info</div>
+                        <div class="message-preview">
+                            "No worries! Ride is March 15-16 on Great Ocean Road. Same $20k team goal. Want more details?"
+                        </div>
+                    </div>
+
+                    <div class="connector-line"></div>
+
+                    <div class="node wait">
+                        <div class="step-number">7b</div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="node-label">Wait</div>
+                        </div>
+                        <div class="node-title">Nurture Delay</div>
+                        <div class="node-content">Add to 7-day re-engagement sequence</div>
+                        <div class="timing-badge">
+                            <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            If no further reply
+                        </div>
+                    </div>
+
+                    <div class="connector-line"></div>
+
+                    <div class="node sms">
+                        <div class="step-number">8b</div>
+                        <div class="ai-badge">
+                            <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                            </svg>
+                            AI
+                        </div>
+                        <div class="node-header">
+                            <div class="node-icon-wrapper">
+                                <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="node-label">SMS</div>
+                        </div>
+                        <div class="node-title">Re-engagement</div>
+                        <div class="node-content">Follow-up with early bird incentive</div>
+                        <div class="message-preview">
+                            "Hi <span class="personalization-tag">{first_name}</span>! Early bird pricing ends Friday. Lock in your spot with <span class="personalization-tag">{team_name}</span> now?"
+                        </div>
+                        <div class="timing-badge">
+                            <svg class="timing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            7 days later
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
