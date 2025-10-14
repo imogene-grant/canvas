@@ -14,7 +14,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #f0f2f5;
-            overflow-x: auto;
+            overflow: auto;
         }
 
         .canvas-header {
@@ -27,6 +27,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .canvas-title {
@@ -62,14 +63,38 @@
             font-weight: 500;
         }
 
+        .sparkle {
+            width: 12px;
+            height: 12px;
+        }
+
         .canvas-board {
-            padding: 32px 24px;
-            min-width: 1400px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            padding: 40px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .canvas-row {
+            display: flex;
             gap: 20px;
-            max-width: 1600px;
-            margin: 0 auto;
+            margin-bottom: 24px;
+            align-items: stretch;
+        }
+
+        .section-header {
+            font-size: 11px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-icon {
+            width: 14px;
+            height: 14px;
         }
 
         .card {
@@ -80,10 +105,12 @@
             transition: all 0.2s;
             cursor: pointer;
             border: 2px solid transparent;
+            flex: 1;
+            min-width: 280px;
         }
 
         .card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
             transform: translateY(-2px);
             border-color: #667eea;
         }
@@ -92,7 +119,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .card-title {
@@ -102,40 +129,137 @@
         }
 
         .card-icon {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             color: #667eea;
         }
 
         .card-title h3 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: #1a2b3c;
         }
 
         .card-menu {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             color: #9ca3af;
             cursor: pointer;
         }
 
-        .card-menu:hover {
-            color: #4b5563;
+        .metric-card {
+            text-align: center;
+            padding: 24px 20px;
         }
 
-        .card-content {
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a2b3c;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 12px;
             color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .metric-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 3px;
+        }
+
+        .nba-card {
+            background: white;
+            border: 2px solid #fbbf24;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nba-card:hover {
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
+        }
+
+        .nba-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .nba-title {
             font-size: 14px;
+            font-weight: 600;
+            color: #1a2b3c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nba-priority {
+            background: #dc2626;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .nba-description {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .nba-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
         }
 
         .page-list {
             list-style: none;
-            margin-top: 12px;
         }
 
         .page-item {
-            padding: 8px 12px;
+            padding: 8px 10px;
             background: #f8f9fa;
             border-radius: 6px;
             margin-bottom: 6px;
@@ -157,36 +281,8 @@
             color: #9ca3af;
         }
 
-        .card-large {
-            grid-column: span 2;
-        }
-
-        .add-journey {
-            background: #f8f9fa;
-            border: 2px dashed #cbd5e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 12px;
-            min-height: 200px;
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .add-journey:hover {
-            background: #e9ecef;
-            border-color: #667eea;
-            color: #667eea;
-        }
-
-        .add-icon {
-            width: 32px;
-            height: 32px;
-        }
-
         .journey-card {
-            background: #fefce8;
+            background: #fffbeb;
             border: 2px solid #fde047;
         }
 
@@ -194,45 +290,30 @@
             border-color: #facc15;
         }
 
-        .journey-preview {
+        .journey-meta {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-            padding: 12px;
-            background: white;
-            border-radius: 6px;
+            gap: 12px;
             font-size: 12px;
-            color: #4a5568;
+            color: #6b7280;
+            margin-top: 12px;
         }
 
-        .journey-step {
-            padding: 6px 12px;
-            background: #667eea;
-            color: white;
-            border-radius: 16px;
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .audience-badge {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 10px;
+            border-radius: 8px;
             font-size: 11px;
             font-weight: 500;
-        }
-
-        .journey-arrow {
-            color: #9ca3af;
-        }
-
-        .section-title {
-            grid-column: span 3;
-            font-size: 14px;
-            font-weight: 600;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 20px;
-            margin-bottom: -10px;
-        }
-
-        .sparkle {
-            width: 12px;
-            height: 12px;
+            margin-top: 10px;
         }
 
         .ai-generated {
@@ -241,7 +322,104 @@
             gap: 4px;
             font-size: 11px;
             color: #667eea;
-            margin-top: 8px;
+            margin-top: 10px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .leaderboard-rank {
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .leaderboard-rank.gold { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
+        .leaderboard-rank.silver { background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%); }
+        .leaderboard-rank.bronze { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); }
+
+        .leaderboard-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .leaderboard-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a2b3c;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .leaderboard-amount {
+            font-size: 14px;
+            font-weight: 700;
+            color: #667eea;
+            white-space: nowrap;
+        }
+
+        .wide-card {
+            flex: 2;
+        }
+
+        .insights-panel {
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            border: 2px solid #a78bfa;
+        }
+
+        .insights-panel:hover {
+            border-color: #7c3aed;
+        }
+
+        .insight-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #5b21b6;
+            margin-bottom: 4px;
+        }
+
+        .insight-label {
+            font-size: 12px;
+            color: #7c3aed;
+            margin-bottom: 12px;
+        }
+
+        .insight-box {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .insight-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .insight-text {
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -264,52 +442,202 @@
     </div>
 
     <div class="canvas-board">
-        <!-- Campaign Website -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                        <line x1="8" y1="21" x2="16" y2="21"></line>
-                        <line x1="12" y1="17" x2="12" y2="21"></line>
+        <!-- ROW 1: PERFORMANCE METRICS -->
+        <div class="section-header">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            Performance
+        </div>
+        <div class="canvas-row">
+            <div class="card metric-card">
+                <div class="metric-value">$487K</div>
+                <div class="metric-label">Total Raised</div>
+                <div class="metric-change">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
                     </svg>
-                    <h3>Campaign Website</h3>
+                    +18% this week
                 </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 81%"></div>
+                </div>
+                <div style="font-size: 11px; color: #6b7280; margin-top: 6px;">81% of $600K goal</div>
             </div>
-            <div class="card-content">
+
+            <div class="card metric-card">
+                <div class="metric-value">284</div>
+                <div class="metric-label">Active Fundraisers</div>
+                <div class="metric-change">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                    +12 today
+                </div>
+            </div>
+
+            <div class="card metric-card">
+                <div class="metric-value">$127</div>
+                <div class="metric-label">Avg Gift</div>
+                <div class="metric-change">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                    +$8 vs 2024
+                </div>
+            </div>
+
+            <div class="card metric-card">
+                <div class="metric-value">24.3%</div>
+                <div class="metric-label">Conversion</div>
+                <div class="metric-change">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                    Above benchmark
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 2: AI INSIGHTS & LEADERBOARD -->
+        <div class="section-header" style="margin-top: 32px;">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+            </svg>
+            AI Insights & Top Performers
+        </div>
+        <div class="canvas-row">
+            <div class="card insights-panel wide-card">
+                <div class="card-title" style="margin-bottom: 16px;">
+                    <h3 style="color: #5b21b6;">AI Predictions</h3>
+                </div>
+                <div class="insight-value">$614,280</div>
+                <div class="insight-label">Projected Final Total · 93% confidence</div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">Key Insights</div>
+                    <div class="insight-text">
+                        • Peak donation times: Tue/Thu 2-4pm<br>
+                        • Email performs 2.3x better than social<br>
+                        • Avg time to first donation: 3.2 days
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                        </svg>
+                        <h3>Leaderboard</h3>
+                    </div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank gold">1</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">Pink Panthers</div>
+                    </div>
+                    <div class="leaderboard-amount">$28.5K</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank silver">2</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">Thunder Riders</div>
+                    </div>
+                    <div class="leaderboard-amount">$24.9K</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank bronze">3</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">Coastal Crew</div>
+                    </div>
+                    <div class="leaderboard-amount">$22.1K</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                        </svg>
+                        <h3>Next Best Actions</h3>
+                    </div>
+                </div>
+
+                <div class="nba-card">
+                    <div class="nba-header">
+                        <div class="nba-title">Match ending soon</div>
+                        <span class="nba-priority">HIGH</span>
+                    </div>
+                    <div class="nba-description">
+                        $50K match expires in 4hrs. Notify 187 fundraisers.
+                    </div>
+                    <button class="nba-action">Send SMS</button>
+                </div>
+
+                <div class="nba-card">
+                    <div class="nba-header">
+                        <div class="nba-title">3 teams stalled</div>
+                        <span class="nba-priority" style="background: #f59e0b;">MED</span>
+                    </div>
+                    <div class="nba-description">
+                        No activity in 5+ days. Launch nudge journey.
+                    </div>
+                    <button class="nba-action">Activate</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 3: CAMPAIGN ELEMENTS -->
+        <div class="section-header" style="margin-top: 32px;">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            </svg>
+            Campaign Elements
+        </div>
+        <div class="canvas-row">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <h3>Website</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
                 <ul class="page-list">
                     <li class="page-item">
                         <svg class="page-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         </svg>
-                        Home / Landing Page
+                        Home
                     </li>
                     <li class="page-item">
                         <svg class="page-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
-                        About the Event
+                        About
                     </li>
                     <li class="page-item">
                         <svg class="page-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                         </svg>
-                        Team Leaderboard
-                    </li>
-                    <li class="page-item">
-                        <svg class="page-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                        </svg>
-                        Route & Logistics
+                        Leaderboard
                     </li>
                 </ul>
                 <div class="ai-generated">
@@ -319,36 +647,30 @@
                     AI Generated
                 </div>
             </div>
-        </div>
 
-        <!-- Registration Flow -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="8.5" cy="7" r="4"></circle>
-                        <line x1="20" y1="8" x2="20" y2="14"></line>
-                        <line x1="23" y1="11" x2="17" y2="11"></line>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                        </svg>
+                        <h3>Registration</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
                     </svg>
-                    <h3>Registration Flow</h3>
                 </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <div class="journey-preview">
-                    <span class="journey-step">Team Select</span>
-                    <span class="journey-arrow">→</span>
-                    <span class="journey-step">Details</span>
-                    <span class="journey-arrow">→</span>
-                    <span class="journey-step">Payment</span>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">
+                    Team Select → Details → Payment
                 </div>
-                <p style="margin-top: 12px; font-size: 13px;">30 teams of 10 riders each</p>
-                <p style="font-size: 13px;">$20,000 minimum per team</p>
+                <div style="font-size: 12px; color: #9ca3af;">
+                    30 teams × 10 riders<br>
+                    $20K minimum per team
+                </div>
                 <div class="ai-generated">
                     <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
@@ -356,50 +678,37 @@
                     AI Generated
                 </div>
             </div>
-        </div>
 
-        <!-- Supporter Pages -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <h3>Supporter Pages</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
                     </svg>
-                    <h3>Supporter Pages</h3>
                 </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
                 <ul class="page-list">
                     <li class="page-item">
                         <svg class="page-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 6v6l4 2"></path>
                         </svg>
-                        Personal Fundraising Page
+                        Personal Page
                     </li>
                     <li class="page-item">
                         <svg class="page-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                         </svg>
-                        Team Fundraising Page
+                        Team Page
                     </li>
                 </ul>
-                <p style="margin-top: 12px; font-size: 12px; color: #667eea;">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor" style="width: 12px; height: 12px; display: inline; margin-right: 4px;">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    Prepopulated with honour badges from 2024
-                </p>
                 <div class="ai-generated">
                     <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
@@ -407,31 +716,27 @@
                     AI Generated
                 </div>
             </div>
-        </div>
 
-        <!-- Supporter Dashboards -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                        <line x1="9" y1="21" x2="9" y2="9"></line>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                        <h3>Dashboards</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
                     </svg>
-                    <h3>Supporter Dashboards</h3>
                 </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
                 <ul class="page-list">
                     <li class="page-item">
                         <svg class="page-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 6v6l4 2"></path>
                         </svg>
                         Rider Dashboard
                     </li>
@@ -440,15 +745,7 @@
                             <path d="M12 20h9"></path>
                             <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                         </svg>
-                        Team Captain Dashboard
-                    </li>
-                    <li class="page-item">
-                        <svg class="page-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="20" x2="18" y2="10"></line>
-                            <line x1="12" y1="20" x2="12" y2="4"></line>
-                            <line x1="6" y1="20" x2="6" y2="14"></line>
-                        </svg>
-                        Progress Tracking
+                        Captain Dashboard
                     </li>
                 </ul>
                 <div class="ai-generated">
@@ -460,298 +757,263 @@
             </div>
         </div>
 
-        <!-- Section Title -->
-        <div class="section-title">Automation Journeys</div>
-
-        <!-- Journey 1: Recruit Past Participants -->
-        <div class="card journey-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="8.5" cy="7" r="4"></circle>
-                        <line x1="20" y1="8" x2="20" y2="14"></line>
-                        <line x1="23" y1="11" x2="17" y2="11"></line>
-                    </svg>
-                    <h3>Recruit past participants</h3>
-                </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <p style="margin-bottom: 8px; font-size: 13px; color: #6b7280;">Invite last year's team captains with personalized SMS and auto team setup</p>
-                <div style="display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; margin: 8px 0;">
-                    Last year's team captains
-                </div>
-                <div class="journey-preview">
-                    <span class="journey-step">9 touchpoints</span>
-                    <span class="journey-arrow">•</span>
-                    <span class="journey-step">14 days</span>
-                </div>
-                <div class="ai-generated">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    AI Generated
-                </div>
-            </div>
-        </div>
-
-        <!-- Journey 2: Nurture New Participants -->
-        <div class="card journey-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    <h3>Nurture new participants</h3>
-                </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <p style="margin-bottom: 8px; font-size: 13px; color: #6b7280;">Onboard first-time riders with tips, resources, and encouragement</p>
-                <div style="display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; margin: 8px 0;">
-                    First-time riders
-                </div>
-                <div class="journey-preview">
-                    <span class="journey-step">12 touchpoints</span>
-                    <span class="journey-arrow">•</span>
-                    <span class="journey-step">30 days</span>
-                </div>
-                <div class="ai-generated">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    AI Generated
-                </div>
-            </div>
-        </div>
-
-        <!-- Journey 3: Welcome Back Returning -->
-        <div class="card journey-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                    <h3>Welcome back returning</h3>
-                </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <p style="margin-bottom: 8px; font-size: 13px; color: #6b7280;">Special welcome for returning riders with recognition and benefits</p>
-                <div style="display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; margin: 8px 0;">
-                    Past participants
-                </div>
-                <div class="journey-preview">
-                    <span class="journey-step">7 touchpoints</span>
-                    <span class="journey-arrow">•</span>
-                    <span class="journey-step">10 days</span>
-                </div>
-                <div class="ai-generated">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    AI Generated
-                </div>
-            </div>
-        </div>
-
-        <!-- Journey 4: Team Captain Coaching -->
-        <div class="card journey-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 20h9"></path>
-                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                    </svg>
-                    <h3>Team captain coaching</h3>
-                </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <p style="margin-bottom: 8px; font-size: 13px; color: #6b7280;">Guide captains with leadership tips and fundraising strategies</p>
-                <div style="display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; margin: 8px 0;">
-                    Team captains
-                </div>
-                <div class="journey-preview">
-                    <span class="journey-step">15 touchpoints</span>
-                    <span class="journey-arrow">•</span>
-                    <span class="journey-step">45 days</span>
-                </div>
-                <div class="ai-generated">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    AI Generated
-                </div>
-            </div>
-        </div>
-
-        <!-- Journey 5: Countdown to Event -->
-        <div class="card journey-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    <h3>Countdown to event start</h3>
-                </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <p style="margin-bottom: 8px; font-size: 13px; color: #6b7280;">Build excitement with prep tips, logistics, and motivation</p>
-                <div style="display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; margin: 8px 0;">
-                    All registered riders
-                </div>
-                <div class="journey-preview">
-                    <span class="journey-step">8 touchpoints</span>
-                    <span class="journey-arrow">•</span>
-                    <span class="journey-step">14 days</span>
-                </div>
-                <div class="ai-generated">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    AI Generated
-                </div>
-            </div>
-        </div>
-
-        <!-- Journey 6: Post Event Nurturing -->
-        <div class="card journey-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                    <h3>Post event nurturing</h3>
-                </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <p style="margin-bottom: 8px; font-size: 13px; color: #6b7280;">Thank participants, share impact, and maintain engagement</p>
-                <div style="display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; margin: 8px 0;">
-                    Event participants
-                </div>
-                <div class="journey-preview">
-                    <span class="journey-step">10 touchpoints</span>
-                    <span class="journey-arrow">•</span>
-                    <span class="journey-step">21 days</span>
-                </div>
-                <div class="ai-generated">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    AI Generated
-                </div>
-            </div>
-        </div>
-
-        <!-- Journey 7: Matched Giving -->
-        <div class="card journey-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                    </svg>
-                    <h3>Matched giving moment</h3>
-                </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <p style="margin-bottom: 8px; font-size: 13px; color: #6b7280;">Amplify donations with matching gift opportunities</p>
-                <div style="display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; margin: 8px 0;">
-                    Active fundraisers
-                </div>
-                <div class="journey-preview">
-                    <span class="journey-step">5 touchpoints</span>
-                    <span class="journey-arrow">•</span>
-                    <span class="journey-step">48 hours</span>
-                </div>
-                <div class="ai-generated">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    AI Generated
-                </div>
-            </div>
-        </div>
-
-        <!-- Journey 8: Nudge Stalled Pages -->
-        <div class="card journey-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                    <h3>Nudge stalled pages</h3>
-                </div>
-                <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </div>
-            <div class="card-content">
-                <p style="margin-bottom: 8px; font-size: 13px; color: #6b7280;">Re-engage inactive fundraisers with motivation and tips</p>
-                <div style="display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; margin: 8px 0;">
-                    Inactive fundraisers
-                </div>
-                <div class="journey-preview">
-                    <span class="journey-step">6 touchpoints</span>
-                    <span class="journey-arrow">•</span>
-                    <span class="journey-step">14 days</span>
-                </div>
-                <div class="ai-generated">
-                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
-                    </svg>
-                    AI Generated
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Journey -->
-        <div class="card add-journey">
-            <svg class="add-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
+        <!-- ROW 4: AUTOMATION JOURNEYS -->
+        <div class="section-header" style="margin-top: 32px;">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
-            <span>Add New Journey</span>
+            Automation Journeys
+        </div>
+        <div class="canvas-row">
+            <div class="card journey-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                        </svg>
+                        <h3>Recruit past participants</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                    Invite last year's team captains with SMS
+                </div>
+                <div class="audience-badge">Last year's captains</div>
+                <div class="journey-meta">
+                    <div class="meta-item">9 touchpoints</div>
+                    <div class="meta-item">14 days</div>
+                </div>
+                <div class="ai-generated">
+                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                    </svg>
+                    AI Generated
+                </div>
+            </div>
+
+            <div class="card journey-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        </svg>
+                        <h3>Nurture new participants</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                    Onboard first-time riders with tips
+                </div>
+                <div class="audience-badge">First-time riders</div>
+                <div class="journey-meta">
+                    <div class="meta-item">12 touchpoints</div>
+                    <div class="meta-item">30 days</div>
+                </div>
+                <div class="ai-generated">
+                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                    </svg>
+                    AI Generated
+                </div>
+            </div>
+
+            <div class="card journey-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        </svg>
+                        <h3>Welcome back returning</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                    Special welcome with recognition
+                </div>
+                <div class="audience-badge">Past participants</div>
+                <div class="journey-meta">
+                    <div class="meta-item">7 touchpoints</div>
+                    <div class="meta-item">10 days</div>
+                </div>
+                <div class="ai-generated">
+                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                    </svg>
+                    AI Generated
+                </div>
+            </div>
+
+            <div class="card journey-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        <h3>Team captain coaching</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                    Leadership tips and strategies
+                </div>
+                <div class="audience-badge">Team captains</div>
+                <div class="journey-meta">
+                    <div class="meta-item">15 touchpoints</div>
+                    <div class="meta-item">45 days</div>
+                </div>
+                <div class="ai-generated">
+                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                    </svg>
+                    AI Generated
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 5: MORE JOURNEYS -->
+        <div class="canvas-row">
+            <div class="card journey-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <h3>Countdown to event</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                    Build excitement with prep tips
+                </div>
+                <div class="audience-badge">All riders</div>
+                <div class="journey-meta">
+                    <div class="meta-item">8 touchpoints</div>
+                    <div class="meta-item">14 days</div>
+                </div>
+                <div class="ai-generated">
+                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                    </svg>
+                    AI Generated
+                </div>
+            </div>
+
+            <div class="card journey-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <h3>Post event nurturing</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                    Thank and share impact stories
+                </div>
+                <div class="audience-badge">Participants</div>
+                <div class="journey-meta">
+                    <div class="meta-item">10 touchpoints</div>
+                    <div class="meta-item">21 days</div>
+                </div>
+                <div class="ai-generated">
+                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                    </svg>
+                    AI Generated
+                </div>
+            </div>
+
+            <div class="card journey-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <h3>Matched giving moment</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                    Amplify with matching opportunities
+                </div>
+                <div class="audience-badge">Active fundraisers</div>
+                <div class="journey-meta">
+                    <div class="meta-item">5 touchpoints</div>
+                    <div class="meta-item">48 hours</div>
+                </div>
+                <div class="ai-generated">
+                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                    </svg>
+                    AI Generated
+                </div>
+            </div>
+
+            <div class="card journey-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <h3>Nudge stalled pages</h3>
+                    </div>
+                    <svg class="card-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                    Re-engage inactive fundraisers
+                </div>
+                <div class="audience-badge">Inactive fundraisers</div>
+                <div class="journey-meta">
+                    <div class="meta-item">6 touchpoints</div>
+                    <div class="meta-item">14 days</div>
+                </div>
+                <div class="ai-generated">
+                    <svg class="sparkle" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                    </svg>
+                    AI Generated
+                </div>
+            </div>
         </div>
     </div>
 </body>
